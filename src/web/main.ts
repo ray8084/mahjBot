@@ -52,10 +52,16 @@ function renderSeat(name: SeatName): void {
   const st = game.stats[name];
   const rate = st.games ? ((100 * st.wins) / st.games).toFixed(0) : "0";
 
+  const isWinner = game.phase === "over" && game.winner === name;
   section.classList.toggle("active", game.phase === "play" && game.turn === name);
+  section.classList.toggle("winner", isWinner);
+  section.classList.toggle("not-winner", game.phase === "over" && !isWinner && !game.wallGame);
 
   const youTag = section.querySelector(".you-tag") as HTMLElement | null;
   if (youTag) youTag.hidden = !(seat.isHuman);
+
+  const winnerTag = section.querySelector(".winner-tag") as HTMLElement | null;
+  if (winnerTag) winnerTag.hidden = !isWinner;
 
   (section.querySelector(".seat-stats") as HTMLElement).textContent =
     `W ${st.wins}/${st.games} (${rate}%)`;

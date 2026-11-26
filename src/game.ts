@@ -297,11 +297,12 @@ export class Game {
   }
 
   declareWin(seat: Seat): void {
-    const win = seat.isWinning();
+    const win = seat.isWinning() ?? seat.best();
     this.phase = "over";
     this.winner = seat.name;
-    this.winningHand = win ? win.pattern.display() : seat.best().pattern.display();
+    this.winningHand = win.pattern.display();
     this.log(`MAHJONG! ${seat.name}: ${this.winningHand}`);
+    this.revealWinningHand(seat, win.tileSet.tileIds);
     this.gamesPlayed++;
     this.lastMahjongWallTiles = this.wall.tiles.length;
     const decade = Game.tilesLeftDecade(this.wall.tiles.length);
@@ -310,6 +311,30 @@ export class Game {
       this.stats[s.name].games++;
       if (s.name === seat.name) this.stats[s.name].wins++;
     }
+  }
+
+  /**
+   * Move the winner's full 14 tiles onto the exposed rack, ordered by the
+   * winning pattern, so the completed hand is easy to read above an empty hand.
+   */
+  private revealWinningHand(seat: Seat, patternIds: number[]): void {
+    const pool = [...seat.hand.tiles, ...seat.rack.tiles];
+    seat.hand.tiles = [];
+    seat.rack.tiles = [];
+    const ordered: Tile[] = [];
+    for (const id of patternIds) {
+      let idx = pool.findIndex((t) => !t.isJoker() && t.id === id);
+      if (idx < 0) idx = pool.findIndex((t) => t.isJoker());
+      if (idx >= 0) {
+        const t = pool.splice(idx, 1)[0];
+        if (t.isJoker()) t.jokerId = id;
+        ordered.push(t);
+      }
+    }
+    // Any leftovers (shouldn't happen on a true win)
+    ordered.push(...pool);
+    seat.rack.tiles = ordered;
+    seat.rack.hasExposedTiles = true;
   }
 
   private declareWall(): void {

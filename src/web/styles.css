@@ -361,6 +361,51 @@ body {
   vertical-align: middle;
 }
 
+.winner-tag {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: #ffe566;
+  color: #1a1208;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
+.seat.winner {
+  z-index: 5;
+  padding: 0.45rem 0.55rem;
+  border-radius: 10px;
+  background: rgba(255, 229, 102, 0.22);
+  outline: 2px solid #ffe566;
+}
+
+.seat.winner .rack.exposed {
+  display: flex;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 229, 102, 0.7);
+  padding: 6px 8px;
+}
+
+.seat.winner .rack.exposed .tile {
+  width: calc(var(--tile-w) + 4px);
+  height: calc(var(--tile-h) + 6px);
+}
+
+.seat.not-winner {
+  opacity: 0.55;
+}
+
+.rack.exposed {
+  order: 0;
+}
+
+.rack.hand {
+  order: 1;
+}
+
 .seat-stats {
   font-size: 0.78rem;
   opacity: 0.9;
@@ -368,6 +413,7 @@ body {
 }
 
 .seat-hands {
+  order: 2;
   list-style: none;
   margin: 0;
   padding: 0.25rem 0.4rem;
