@@ -207,22 +207,35 @@ export class Bot {
     const matching = concealed.filter((t) => t.id === discard.id);
     const jokers = concealed.filter((t) => t.isJoker());
     const slotsToFill = groupSize - 1; // discard fills one
-    if (matching.length >= slotsToFill) {
-      return { fromHand: matching.slice(0, slotsToFill), winning: false };
-    }
-    const jokersNeeded = slotsToFill - matching.length;
-    if (jokersNeeded > jokers.length) return null;
-    if (jokersNeeded > 2) return null; // don't dump too many jokers on a call
-    // Jokers only legal if this group allows them
-    if (jokersNeeded > 0 && !need.jokersAllowed) return null;
 
-    const fromHand = [
-      ...matching,
-      ...jokers.slice(0, jokersNeeded).map((j) => {
-        j.jokerId = discard.id;
-        return j;
-      }),
-    ];
+    let fromHand: Tile[] | null = null;
+    if (matching.length >= slotsToFill) {
+      fromHand = matching.slice(0, slotsToFill);
+    } else {
+      const jokersNeeded = slotsToFill - matching.length;
+      if (jokersNeeded > jokers.length) return null;
+      if (jokersNeeded > 2) return null; // don't dump too many jokers on a call
+      // Jokers only legal if this group allows them
+      if (jokersNeeded > 0 && !need.jokersAllowed) return null;
+      fromHand = [
+        ...matching,
+        ...jokers.slice(0, jokersNeeded).map((j) => {
+          j.jokerId = discard.id;
+          return j;
+        }),
+      ];
+    }
+
+    // Calling the tile that completes mahjong wins immediately — no discard after.
+    const fromSet = new Set(fromHand);
+    const handLeft = concealed.filter((t) => !fromSet.has(t));
+    const allAfter = [...handLeft, ...exposed, discard, ...fromHand];
+    if (allAfter.length === 14 && seat.card.isMahjong(allAfter)) {
+      return { fromHand, winning: true };
+    }
+
+    // Non-winning call must leave at least one tile to discard.
+    if (fromHand.length >= concealed.length) return null;
     return { fromHand, winning: false };
   }
 

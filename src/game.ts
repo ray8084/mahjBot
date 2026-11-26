@@ -386,7 +386,16 @@ export class Game {
     if (caller) {
       const call = Bot.tryCall(caller, discard, false)!;
       if (call.winning) {
-        caller.hand.tiles.push(discard);
+        // Mahjong call: take the tile (expose meld if pung+/etc.) and win — no discard.
+        if (call.fromHand.length > 0) {
+          Bot.applyCall(caller, discard, call.fromHand);
+          this.log(`${caller.name} called ${discard.getDisplayName()} for mahjong`);
+        } else {
+          caller.hand.tiles.push(discard);
+          this.log(`${caller.name} took ${discard.getDisplayName()} for mahjong`);
+        }
+        this.lastDiscard = null;
+        this.pendingHumanCall = null;
         this.declareWin(caller);
         return;
       }
@@ -402,6 +411,11 @@ export class Game {
       if (ex) this.log(ex);
       if (caller.isWinning()) {
         this.declareWin(caller);
+        return;
+      }
+      if (caller.hand.tiles.length === 0) {
+        this.log(`${caller.name} call left an empty hand — treating as wall.`);
+        this.declareWall();
         return;
       }
       const d = Bot.discard(caller, true);
@@ -443,6 +457,12 @@ export class Game {
 
     if (seat.isWinning()) {
       this.declareWin(seat);
+      return;
+    }
+
+    if (seat.hand.tiles.length === 0) {
+      this.log(`${name} has nothing to discard — treating as wall.`);
+      this.declareWall();
       return;
     }
 
@@ -513,7 +533,14 @@ export class Game {
     const call = Bot.tryCall(east, discard, false);
     if (!call) return "Cannot call that tile under NMJL rules (need pung+ or mahjong; no jokers on singles/pairs).";
     if (call.winning) {
-      east.hand.tiles.push(discard);
+      // Mahjong call: take the tile and win — do not discard.
+      if (call.fromHand.length > 0) {
+        Bot.applyCall(east, discard, call.fromHand);
+        this.log(`You called ${discard.getDisplayName()} for mahjong`);
+      } else {
+        east.hand.tiles.push(discard);
+        this.log(`You took ${discard.getDisplayName()} for mahjong`);
+      }
       this.lastDiscard = null;
       this.pendingHumanCall = null;
       this.declareWin(east);
@@ -588,9 +615,16 @@ export class Game {
   playOneWatchGame(): { wall: boolean; winner: SeatName | null; hand: string; gameNumber: number } {
     const wasHuman = this.humanEast;
     this.newGame(false);
-    this.auto();
-    if (this.phase !== "over") {
-      this.declareWall();
+    try {
+      this.auto();
+      if (this.phase !== "over") {
+        this.declareWall();
+      }
+    } catch (err) {
+      console.error("Watch game aborted:", err);
+      if (this.phase !== "over") {
+        this.declareWall();
+      }
     }
     const result = {
       wall: this.wallGame,

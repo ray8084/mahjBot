@@ -317,9 +317,10 @@ export class Card {
   }
 
   /**
-   * Remaining need for `discardId` in the best pattern after removing exposed
-   * rack tiles from the pattern. Returns group size needed for that tile
-   * (0 if not needed).
+   * Callable meld for `discardId` under the best pattern after accounting for
+   * exposed rack tiles. Returns one untouched pung/kong/quint/sextet group —
+   * not the sum of every remaining slot for that id (e.g. two FFF groups stay
+   * size 3 each, not 6).
    */
   callNeed(
     concealed: Tile[],
@@ -328,17 +329,7 @@ export class Card {
   ): { groupSize: number; jokersAllowed: boolean; pattern: LetterPattern; tileIds: number[] } | null {
     const all = [...concealed, ...exposed];
     const best = this.bestMatch(all);
-    const remaining = [...best.tileSet.tileIds];
-    for (const t of exposed) {
-      const id = t.isJoker() && t.jokerId > 0 ? t.jokerId : t.id;
-      const idx = remaining.indexOf(id);
-      if (idx >= 0) remaining.splice(idx, 1);
-    }
     const bits = best.pattern.jokerBits;
-    // Rebuild bits for remaining by tracking which pattern indices remain —
-    // simpler: count how many of discardId still needed in remaining.
-    let need = 0;
-    let jokersAllowed = false;
     const fullIds = best.tileSet.tileIds;
     const used = new Array(fullIds.length).fill(false);
     for (const t of exposed) {
@@ -350,20 +341,26 @@ export class Card {
         }
       }
     }
-    for (let i = 0; i < fullIds.length; i++) {
-      if (used[i]) continue;
-      if (fullIds[i] === discardId) {
-        need++;
+
+    for (const g of Card.groupInfo(fullIds, bits)) {
+      if (g.id !== discardId || g.size < 3) continue;
+      let unused = 0;
+      let jokersAllowed = false;
+      for (let i = g.start; i < g.start + g.size; i++) {
+        if (used[i]) continue;
+        unused++;
         if (bits[i] === "1") jokersAllowed = true;
       }
+      // Only expose a full meld that nothing has claimed yet.
+      if (unused !== g.size) continue;
+      return {
+        groupSize: g.size,
+        jokersAllowed,
+        pattern: best.pattern,
+        tileIds: fullIds,
+      };
     }
-    if (need === 0) return null;
-    return {
-      groupSize: need,
-      jokersAllowed,
-      pattern: best.pattern,
-      tileIds: best.tileSet.tileIds,
-    };
+    return null;
   }
 
   static tileCode(id: number): string {

@@ -453,6 +453,42 @@ function yieldToUi(): Promise<void> {
   });
 }
 
+function formatClock(date: Date): string {
+  return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+}
+
+function setRunProgress(finished: number, n: number, startedAt: number): void {
+  const panel = $("run-progress");
+  const fill = $("run-progress-fill");
+  const countEl = $("run-progress-count");
+  const etaEl = $("run-progress-eta");
+  panel.hidden = false;
+  const pct = n > 0 ? Math.min(100, (finished / n) * 100) : 0;
+  fill.style.width = `${pct}%`;
+  countEl.textContent = `Running ${finished} / ${n}`;
+  $("status").textContent = `Running ${finished} / ${n}…`;
+
+  if (finished <= 0) {
+    etaEl.textContent = "estimating…";
+    return;
+  }
+  const elapsedMs = performance.now() - startedAt;
+  const remainingMs = (elapsedMs / finished) * (n - finished);
+  if (finished >= n || remainingMs < 500) {
+    etaEl.textContent = `done ~${formatClock(new Date())}`;
+    return;
+  }
+  const doneAt = new Date(Date.now() + remainingMs);
+  etaEl.textContent = `done ~${formatClock(doneAt)}`;
+}
+
+function hideRunProgress(): void {
+  $("run-progress").hidden = true;
+  $("run-progress-fill").style.width = "0%";
+  $("run-progress-count").textContent = "";
+  $("run-progress-eta").textContent = "";
+}
+
 async function runMany(n: number): Promise<void> {
   if (running) return;
   running = true;
@@ -461,7 +497,8 @@ async function runMany(n: number): Promise<void> {
   const stopBtn = $("btn-stop") as HTMLButtonElement;
   runBtn.disabled = true;
   stopBtn.disabled = false;
-  $("status").textContent = `Running 0 / ${n}…`;
+  const startedAt = performance.now();
+  setRunProgress(0, n, startedAt);
 
   let finished = 0;
   for (let i = 0; i < n; i++) {
@@ -474,15 +511,13 @@ async function runMany(n: number): Promise<void> {
       winner: result.winner,
       hand: result.hand,
     });
-    renderStats();
-    $("status").textContent = `Running ${finished} / ${n}…`;
-    // Keep UI responsive; refresh table tiles every 10 games
-    if (i === n - 1 || i % 10 === 9 || stopRequested) {
+    // Update UI every 3rd game (and on last / stop)
+    if (finished === n || finished % 3 === 0 || stopRequested) {
+      setRunProgress(finished, n, startedAt);
+      renderStats();
       for (const name of ["East", "South", "West", "North"] as SeatName[]) {
         renderSeat(name);
       }
-      await yieldToUi();
-    } else if (i % 3 === 2) {
       await yieldToUi();
     }
   }
@@ -494,6 +529,7 @@ async function runMany(n: number): Promise<void> {
   stopRequested = false;
   runBtn.disabled = false;
   stopBtn.disabled = true;
+  hideRunProgress();
   render();
   $("status").textContent = wasStopped
     ? `Stopped · ${finished} / ${n} games`
@@ -526,6 +562,7 @@ async function boot(): Promise<void> {
     if (!running) return;
     stopRequested = true;
     $("status").textContent = "Stopping…";
+    $("run-progress-eta").textContent = "stopping…";
   });
 
   $("btn-clear").addEventListener("click", () => {
