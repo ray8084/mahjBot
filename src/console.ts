@@ -65,7 +65,9 @@ function handle(line: string): boolean {
       const rate = s.games ? ((100 * s.wins) / s.games).toFixed(1) : "0.0";
       console.log(`  ${name}: ${s.wins} wins / ${s.games} games = ${rate}%`);
     }
-    console.log(`  Wall games included in game count; wins only on mahjong.`);
+    console.log(
+      `  Wall: ${game.wallGames}/${game.gamesPlayed} = ${game.wallRate().toFixed(1)}%`,
+    );
     return true;
   }
 

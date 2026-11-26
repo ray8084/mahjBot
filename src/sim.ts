@@ -22,5 +22,6 @@ for (const name of ["East", "South", "West", "North"] as const) {
     `${name.padEnd(9)}${String(s.wins).padStart(4)}   ${String(s.games).padStart(5)}   ${rate.padStart(5)}%`,
   );
 }
-const walls = n - ["East", "South", "West", "North"].reduce((a, name) => a + game.stats[name as "East"].wins, 0);
-console.log(`\nWall games: ${walls} (${((100 * walls) / n).toFixed(1)}%)`);
+console.log(
+  `\nWall games: ${game.wallGames}/${game.gamesPlayed} (${game.wallRate().toFixed(1)}%)`,
+);

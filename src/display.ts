@@ -85,6 +85,8 @@ function renderStats(game: Game): string {
     const r = s.games ? ((100 * s.wins) / s.games).toFixed(0) : "0";
     return `${n} ${s.wins}/${s.games} ${r}%`;
   });
+  const wr = game.gamesPlayed ? game.wallRate().toFixed(0) : "0";
+  parts.push(`Wall ${game.wallGames}/${game.gamesPlayed} ${wr}%`);
   return `║  Stats: ${pad(parts.join("  ·  "), 61)}║`;
 }
 

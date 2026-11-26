@@ -64,6 +64,25 @@ export class Game {
     North: { wins: 0, games: 0 },
   };
   gamesPlayed = 0;
+  wallGames = 0;
+  /**
+   * Mahjong wins by tiles-left decade (0=0–9, 1=10–19, …).
+   * Pre-populated so the chart always shows every bucket.
+   */
+  tilesLeftBuckets: Record<number, number> = Game.emptyTileBuckets();
+  /** Wall tiles remaining when the last mahjong was declared. */
+  lastMahjongWallTiles = 0;
+
+  /** Decades 0..9 cover 0–99 wall tiles (max after deal is 99). */
+  static emptyTileBuckets(): Record<number, number> {
+    const buckets: Record<number, number> = {};
+    for (let d = 0; d <= 9; d++) buckets[d] = 0;
+    return buckets;
+  }
+
+  static tilesLeftDecade(tilesLeft: number): number {
+    return Math.min(9, Math.max(0, Math.floor(tilesLeft / 10)));
+  }
 
   constructor(card: Card) {
     this.masterCard = card;
@@ -284,6 +303,9 @@ export class Game {
     this.winningHand = win ? win.pattern.display() : seat.best().pattern.display();
     this.log(`MAHJONG! ${seat.name}: ${this.winningHand}`);
     this.gamesPlayed++;
+    this.lastMahjongWallTiles = this.wall.tiles.length;
+    const decade = Game.tilesLeftDecade(this.wall.tiles.length);
+    this.tilesLeftBuckets[decade] = (this.tilesLeftBuckets[decade] ?? 0) + 1;
     for (const s of this.seats) {
       this.stats[s.name].games++;
       if (s.name === seat.name) this.stats[s.name].wins++;
@@ -296,6 +318,7 @@ export class Game {
     this.winner = null;
     this.log("Wall game — no winner.");
     this.gamesPlayed++;
+    this.wallGames++;
     for (const s of this.seats) this.stats[s.name].games++;
   }
 
@@ -528,18 +551,53 @@ export class Game {
     this.startPlayIfNeeded();
   }
 
-  /** Run N complete watch-mode games for stats. */
-  simulate(n: number): void {
+  /**
+   * Run one complete watch-mode game. Returns a result summary.
+   * Does not change humanEast permanently.
+   */
+  playOneWatchGame(): { wall: boolean; winner: SeatName | null; hand: string; gameNumber: number } {
     const wasHuman = this.humanEast;
-    for (let i = 0; i < n; i++) {
-      this.newGame(false);
-      this.auto();
-      if (this.phase !== "over") {
-        // Safety: force wall if stuck
-        this.declareWall();
-      }
+    this.newGame(false);
+    this.auto();
+    if (this.phase !== "over") {
+      this.declareWall();
     }
+    const result = {
+      wall: this.wallGame,
+      winner: this.winner,
+      hand: this.winningHand,
+      gameNumber: this.gamesPlayed,
+    };
     this.humanEast = wasHuman;
+    return result;
+  }
+
+  /** Run N complete watch-mode games for stats. */
+  simulate(n: number, onGame?: (result: ReturnType<Game["playOneWatchGame"]>) => void): void {
+    for (let i = 0; i < n; i++) {
+      const result = this.playOneWatchGame();
+      onGame?.(result);
+    }
+  }
+
+  /** Reset seat win / game counters. */
+  clearStats(): void {
+    for (const name of SEAT_ORDER) {
+      this.stats[name] = { wins: 0, games: 0 };
+    }
+    this.gamesPlayed = 0;
+    this.wallGames = 0;
+    this.tilesLeftBuckets = Game.emptyTileBuckets();
+    this.lastMahjongWallTiles = 0;
+  }
+
+  mahjongWins(): number {
+    return SEAT_ORDER.reduce((n, name) => n + this.stats[name].wins, 0);
+  }
+
+  wallRate(): number {
+    if (this.gamesPlayed === 0) return 0;
+    return (100 * this.wallGames) / this.gamesPlayed;
   }
 
   winRate(name: SeatName): number {

@@ -1,11 +1,24 @@
 import "./styles.css";
+import { Bot } from "../bot";
 import { Card } from "../card";
 import { Game } from "../game";
+import { HandProbs } from "../probs";
 import type { SeatName } from "../seat";
 import { Tile } from "../tile";
 
 let game: Game;
+let probs: HandProbs;
 const selected = new Set<number>(); // hand indices for East
+
+interface GameResultRow {
+  gameNumber: number;
+  wall: boolean;
+  winner: SeatName | null;
+  hand: string;
+}
+
+const resultFeed: GameResultRow[] = [];
+const FEED_MAX = 200;
 
 function $(id: string): HTMLElement {
   const el = document.getElementById(id);
@@ -38,7 +51,6 @@ function renderSeat(name: SeatName): void {
   const seat = game.seat(name);
   const st = game.stats[name];
   const rate = st.games ? ((100 * st.wins) / st.games).toFixed(0) : "0";
-  const best = seat.best();
 
   section.classList.toggle("active", game.phase === "play" && game.turn === name);
 
@@ -47,8 +59,30 @@ function renderSeat(name: SeatName): void {
 
   (section.querySelector(".seat-stats") as HTMLElement).textContent =
     `W ${st.wins}/${st.games} (${rate}%)`;
-  (section.querySelector(".seat-chase") as HTMLElement).textContent =
-    `${best.filled}/14 · ${best.pattern.pattern}`;
+
+  const handsEl = section.querySelector(".seat-hands") as HTMLElement;
+  clear(handsEl);
+  const top = Bot.topHandMatches(seat, 10, (id) => probs.pct(id));
+  let bestProbIdx = -1;
+  let bestProb = -1;
+  top.forEach((m, i) => {
+    const p = probs.pct(m.index);
+    if (p !== null && p > bestProb) {
+      bestProb = p;
+      bestProbIdx = i;
+    }
+  });
+  top.forEach((m, i) => {
+    const li = document.createElement("li");
+    const pct = probs.formatPct(m.index);
+    const label = m.concealed ? `${m.pattern} (C)` : m.pattern;
+    if (i === bestProbIdx) li.classList.add("best-prob");
+    li.innerHTML =
+      `<span class="match">${m.filled}/14</span>` +
+      `<span class="prob" title="1M-deal completion rate">${pct}</span>` +
+      `<span class="pat" title="${m.note || label}">${label}</span>`;
+    handsEl.appendChild(li);
+  });
 
   const exposed = section.querySelector(".rack.exposed") as HTMLElement;
   const hand = section.querySelector(".rack.hand") as HTMLElement;
@@ -111,6 +145,110 @@ function renderStats(): void {
     span.innerHTML = `<strong>${name}</strong> ${s.wins}/${s.games} <em>${rate}%</em>`;
     el.appendChild(span);
   }
+  const wall = document.createElement("span");
+  wall.className = "seat-stat wall-stat";
+  const wallRate = game.gamesPlayed ? game.wallRate().toFixed(0) : "0";
+  wall.innerHTML = `<strong>Wall</strong> ${game.wallGames}/${game.gamesPlayed} <em>${wallRate}%</em>`;
+  el.appendChild(wall);
+  renderChart();
+  renderFeed();
+}
+
+function appendBarRow(
+  parent: HTMLElement,
+  label: string,
+  count: number,
+  total: number,
+  opts: { wall?: boolean; rounds?: boolean; hidePct?: boolean } = {},
+): void {
+  const pct = total > 0 ? (100 * count) / total : 0;
+  const row = document.createElement("div");
+  row.className = `chart-row${opts.wall ? " wall" : ""}${opts.rounds ? " rounds" : ""}`;
+
+  const lab = document.createElement("span");
+  lab.className = "label";
+  lab.textContent = label;
+
+  const track = document.createElement("span");
+  track.className = "track";
+  const fill = document.createElement("span");
+  fill.className = "fill";
+  fill.style.width = `${Math.max(pct > 0 ? 2 : 0, pct).toFixed(1)}%`;
+  track.appendChild(fill);
+
+  const value = document.createElement("span");
+  value.className = "value";
+  value.textContent = opts.hidePct ? String(count) : `${count} · ${pct.toFixed(0)}%`;
+
+  row.append(lab, track, value);
+  parent.appendChild(row);
+}
+
+function renderChart(): void {
+  const el = $("chart");
+  clear(el);
+  const total = Math.max(1, game.gamesPlayed);
+  appendBarRow(el, "East", game.stats.East.wins, total);
+  appendBarRow(el, "South", game.stats.South.wins, total);
+  appendBarRow(el, "West", game.stats.West.wins, total);
+  appendBarRow(el, "North", game.stats.North.wins, total);
+  appendBarRow(el, "Wall", game.wallGames, total, { wall: true });
+  renderRoundsChart();
+}
+
+function renderRoundsChart(): void {
+  const el = $("chart-rounds");
+  clear(el);
+  // Scale bars to the largest bucket so the biggest fills the track.
+  let maxCount = 1;
+  for (let decade = 0; decade <= 9; decade++) {
+    maxCount = Math.max(maxCount, game.tilesLeftBuckets[decade] ?? 0);
+  }
+  // High tiles left on top, lowest (0–9) on bottom; always show all decades.
+  for (let decade = 9; decade >= 0; decade--) {
+    const lo = decade * 10;
+    const hi = lo + 9;
+    const count = game.tilesLeftBuckets[decade] ?? 0;
+    appendBarRow(el, `${lo}-${hi}`, count, maxCount, { rounds: true, hidePct: true });
+  }
+}
+
+function renderFeed(): void {
+  const el = $("results-feed");
+  clear(el);
+  if (resultFeed.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "Run or Auto a game to see results.";
+    el.appendChild(empty);
+    return;
+  }
+  for (const row of resultFeed) {
+    const item = document.createElement("div");
+    item.className = `result-item ${row.wall ? "wall" : "win"}`;
+    const who = row.wall ? "Wall" : (row.winner ?? "?");
+    item.innerHTML =
+      `<div class="who">#${row.gameNumber} · ${who}</div>` +
+      (row.wall ? "" : `<div class="hand" title="${row.hand}">${row.hand || "Mahjong"}</div>`);
+    el.appendChild(item);
+  }
+}
+
+function recordResult(row: GameResultRow): void {
+  resultFeed.unshift(row);
+  if (resultFeed.length > FEED_MAX) resultFeed.length = FEED_MAX;
+}
+
+function captureCurrentResult(): void {
+  if (game.phase !== "over") return;
+  // Avoid duplicate if already recorded for this gameNumber
+  if (resultFeed[0]?.gameNumber === game.gamesPlayed) return;
+  recordResult({
+    gameNumber: game.gamesPlayed,
+    wall: game.wallGame,
+    winner: game.winner,
+    hand: game.winningHand,
+  });
 }
 
 function renderCenter(): void {
@@ -245,11 +383,18 @@ function renderCenter(): void {
 }
 
 function render(): void {
+  if (game.phase === "over") captureCurrentResult();
   renderStats();
   for (const name of ["East", "South", "West", "North"] as SeatName[]) {
     renderSeat(name);
   }
   renderCenter();
+}
+
+function newGame(): void {
+  selected.clear();
+  game.newGame(game.humanEast);
+  render();
 }
 
 function newWatch(): void {
@@ -266,9 +411,7 @@ function newPlay(): void {
 
 function step(): void {
   if (game.phase === "over") {
-    game.newGame(game.humanEast);
-    selected.clear();
-    render();
+    newGame();
     return;
   }
   if (game.pendingHumanCall) return;
@@ -294,26 +437,71 @@ function auto(): void {
   render();
 }
 
+function yieldToUi(): Promise<void> {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => setTimeout(resolve, 0));
+  });
+}
+
+async function runMany(n: number): Promise<void> {
+  const runBtn = $("btn-run") as HTMLButtonElement;
+  runBtn.disabled = true;
+  $("status").textContent = `Running 0 / ${n}…`;
+
+  for (let i = 0; i < n; i++) {
+    const result = game.playOneWatchGame();
+    recordResult({
+      gameNumber: result.gameNumber,
+      wall: result.wall,
+      winner: result.winner,
+      hand: result.hand,
+    });
+    renderStats();
+    $("status").textContent = `Running ${i + 1} / ${n}…`;
+    // Keep UI responsive; refresh table tiles every 10 games
+    if (i === n - 1 || i % 10 === 9) {
+      for (const name of ["East", "South", "West", "North"] as SeatName[]) {
+        renderSeat(name);
+      }
+      await yieldToUi();
+    } else if (i % 3 === 2) {
+      await yieldToUi();
+    }
+  }
+
+  game.newGame(false);
+  selected.clear();
+  runBtn.disabled = false;
+  render();
+  $("status").textContent = `Done · ${n} games`;
+}
+
 async function boot(): Promise<void> {
-  const card = await Card.load2026Fetch();
+  const [card, handProbs] = await Promise.all([
+    Card.load2026Fetch(),
+    HandProbs.load(),
+  ]);
+  probs = handProbs;
   game = new Game(card);
   game.newGame(false);
 
+  $("btn-new").addEventListener("click", newGame);
   $("btn-watch").addEventListener("click", newWatch);
   $("btn-play").addEventListener("click", newPlay);
   $("btn-step").addEventListener("click", step);
   $("btn-auto").addEventListener("click", auto);
-  $("btn-sim").addEventListener("click", () => {
-    $("status").textContent = "Simulating 20 games…";
-    // Yield so UI updates
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        game.simulate(20);
-        game.newGame(false);
-        selected.clear();
-        render();
-      }, 30);
-    });
+
+  $("btn-run").addEventListener("click", () => {
+    const input = document.getElementById("run-count") as HTMLInputElement;
+    const n = Math.max(1, Math.min(10_000, Math.floor(Number(input.value) || 1)));
+    input.value = String(n);
+    void runMany(n);
+  });
+
+  $("btn-clear").addEventListener("click", () => {
+    game.clearStats();
+    resultFeed.length = 0;
+    render();
   });
 
   render();

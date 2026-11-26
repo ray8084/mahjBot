@@ -1,0 +1,655 @@
+{
+  "source": "1M ghost-race results",
+  "games": 1000000,
+  "finished": 999963,
+  "hands": [
+    {
+      "hand_id": 0,
+      "text": "222 000 2222 6666",
+      "note": "Any 2 Suits",
+      "family": "2026",
+      "concealed": false,
+      "complete_pct": 0.39,
+      "rank": 55
+    },
+    {
+      "hand_id": 1,
+      "text": "2026 DDD 2222 DDD",
+      "note": "Any 2 Suits w Matching Dragons, Kong 2 or 6",
+      "family": "2026",
+      "concealed": false,
+      "complete_pct": 1.7,
+      "rank": 20
+    },
+    {
+      "hand_id": 2,
+      "text": "FFF 2026 222 6666",
+      "note": "Any 3 Suits",
+      "family": "2026",
+      "concealed": false,
+      "complete_pct": 3.07,
+      "rank": 14
+    },
+    {
+      "hand_id": 3,
+      "text": "22 00 222 666 NEWS",
+      "note": "Any 2 Suits",
+      "family": "2026",
+      "concealed": false,
+      "complete_pct": 3.59,
+      "rank": 10
+    },
+    {
+      "hand_id": 4,
+      "text": "222 444 6666 8888",
+      "note": "Any 1 Suit",
+      "family": "2468",
+      "concealed": false,
+      "complete_pct": 0.29,
+      "rank": 58
+    },
+    {
+      "hand_id": 5,
+      "text": "222 444 6666 8888",
+      "note": "Any 2 Suits",
+      "family": "2468",
+      "concealed": false,
+      "complete_pct": 0.74,
+      "rank": 40
+    },
+    {
+      "hand_id": 6,
+      "text": "FF 2222 44 66 8888",
+      "note": "Any 2 Suits",
+      "family": "2468",
+      "concealed": false,
+      "complete_pct": 0.54,
+      "rank": 46
+    },
+    {
+      "hand_id": 7,
+      "text": "EE 22 444 666 88 WW",
+      "note": "Any 1 Suit, East and West Only",
+      "family": "2468",
+      "concealed": false,
+      "complete_pct": 0.94,
+      "rank": 33
+    },
+    {
+      "hand_id": 8,
+      "text": "2222 DDD 8888 DDD",
+      "note": "Any 2 Suits w Matching Dragons, These Nos. Only",
+      "family": "2468",
+      "concealed": false,
+      "complete_pct": 0.6,
+      "rank": 44
+    },
+    {
+      "hand_id": 9,
+      "text": "FFF 22 44 666 8888",
+      "note": "Any 1 Suit",
+      "family": "2468",
+      "concealed": false,
+      "complete_pct": 0.95,
+      "rank": 32
+    },
+    {
+      "hand_id": 10,
+      "text": "2468 2222 D 2222 D",
+      "note": "Any 3 Suits, Like Kongs 2,4,6 or 8 w Matching Dragon",
+      "family": "2468",
+      "concealed": false,
+      "complete_pct": 5.08,
+      "rank": 6
+    },
+    {
+      "hand_id": 11,
+      "text": "FFF 2468 FFF 2222",
+      "note": "Any 2 Suits, Kong 2,4,6 or 8",
+      "family": "2468",
+      "concealed": false,
+      "complete_pct": 1.3,
+      "rank": 29
+    },
+    {
+      "hand_id": 12,
+      "text": "FF 246 888 246 888",
+      "note": "Any 2 Suits",
+      "family": "2468",
+      "concealed": true,
+      "complete_pct": 3.01,
+      "rank": 15
+    },
+    {
+      "hand_id": 13,
+      "text": "1111 FFFFFF 1111",
+      "note": "Any 2 Suits",
+      "family": "Any Like Numbers",
+      "concealed": false,
+      "complete_pct": 0.15,
+      "rank": 63
+    },
+    {
+      "hand_id": 14,
+      "text": "1111 D 111 D 1111 D",
+      "note": "Any 3 Suits w Matching Dragon",
+      "family": "Any Like Numbers",
+      "concealed": false,
+      "complete_pct": 2.42,
+      "rank": 16
+    },
+    {
+      "hand_id": 15,
+      "text": "FF 1111 11 1111 DD",
+      "note": "Any 3 Suits w Any Dragon",
+      "family": "Any Like Numbers",
+      "concealed": false,
+      "complete_pct": 3.19,
+      "rank": 13
+    },
+    {
+      "hand_id": 16,
+      "text": "11111 1111 11111",
+      "note": "Any 3 Suits, Any Like Nos.",
+      "family": "Quints",
+      "concealed": false,
+      "complete_pct": 0.0,
+      "rank": 72
+    },
+    {
+      "hand_id": 17,
+      "text": "FF 11111 22 33333",
+      "note": "Any 1 Suit, Any 3 Consec. Nos.",
+      "family": "Quints",
+      "concealed": false,
+      "complete_pct": 0.01,
+      "rank": 71
+    },
+    {
+      "hand_id": 18,
+      "text": "11111 44444 DDDD",
+      "note": "Any 2 Nos. in Any 1 Suit w Opp. Dragon",
+      "family": "Quints",
+      "concealed": false,
+      "complete_pct": 0.03,
+      "rank": 69
+    },
+    {
+      "hand_id": 19,
+      "text": "11 222 33 444 5555",
+      "note": "Any 1 Suit, These Nos. Only",
+      "family": "Runs",
+      "concealed": false,
+      "complete_pct": 0.76,
+      "rank": 38
+    },
+    {
+      "hand_id": 20,
+      "text": "55 666 77 888 9999",
+      "note": "Any 1 Suit, These Nos. Only",
+      "family": "Runs",
+      "concealed": false,
+      "complete_pct": 0.7,
+      "rank": 41
+    },
+    {
+      "hand_id": 21,
+      "text": "FFF 1111 234 5555",
+      "note": "Any 1 Suit, Any 5 Consec. Nos.",
+      "family": "Runs",
+      "concealed": false,
+      "complete_pct": 5.08,
+      "rank": 5
+    },
+    {
+      "hand_id": 22,
+      "text": "FFF 1111 234 5555",
+      "note": "Any 2 Suits, Any 5 Consec. Nos.",
+      "family": "Runs",
+      "concealed": false,
+      "complete_pct": 9.62,
+      "rank": 2
+    },
+    {
+      "hand_id": 23,
+      "text": "11 22 111 222 3333",
+      "note": "Any 3 Suits, Any 3 Consec. Nos.",
+      "family": "Runs",
+      "concealed": false,
+      "complete_pct": 8.74,
+      "rank": 3
+    },
+    {
+      "hand_id": 24,
+      "text": "111 222 3333 4444",
+      "note": "Any 1 Suit, Any 4 Consec. Nos.",
+      "family": "Runs",
+      "concealed": false,
+      "complete_pct": 1.67,
+      "rank": 22
+    },
+    {
+      "hand_id": 25,
+      "text": "111 222 3333 4444",
+      "note": "Any 2 Suits, Any 4 Consec. Nos.",
+      "family": "Runs",
+      "concealed": false,
+      "complete_pct": 4.15,
+      "rank": 9
+    },
+    {
+      "hand_id": 26,
+      "text": "FFF 11 22 333 DDDD",
+      "note": "Any 1 Suit",
+      "family": "Runs",
+      "concealed": false,
+      "complete_pct": 5.99,
+      "rank": 4
+    },
+    {
+      "hand_id": 27,
+      "text": "FFF 11 22 333 DDDD",
+      "note": "Any 2 Suits, Any Run, Ds Match Middle No.",
+      "family": "Runs",
+      "concealed": false,
+      "complete_pct": 13.45,
+      "rank": 1
+    },
+    {
+      "hand_id": 28,
+      "text": "1111 FFFFFF 2222",
+      "note": "Any 1 Suit, Any 2 Consec. Nos.",
+      "family": "Runs",
+      "concealed": false,
+      "complete_pct": 0.14,
+      "rank": 65
+    },
+    {
+      "hand_id": 29,
+      "text": "FF 1111 2222 3333",
+      "note": "Any 1 Suit, Any 3 Consec. Nos.",
+      "family": "Runs",
+      "concealed": false,
+      "complete_pct": 0.53,
+      "rank": 47
+    },
+    {
+      "hand_id": 30,
+      "text": "FF 1111 2222 3333",
+      "note": "Any 3 Suits, Any 3 Consec. Nos.",
+      "family": "Runs",
+      "concealed": false,
+      "complete_pct": 1.33,
+      "rank": 27
+    },
+    {
+      "hand_id": 31,
+      "text": "1 22 333 1 22 333 44",
+      "note": "Any 3 Suits, Any 4 Consec. Nos.",
+      "family": "Runs",
+      "concealed": true,
+      "complete_pct": 3.48,
+      "rank": 12
+    },
+    {
+      "hand_id": 32,
+      "text": "11 333 55 777 9999",
+      "note": "Any 1 Suit",
+      "family": "13579",
+      "concealed": false,
+      "complete_pct": 0.75,
+      "rank": 39
+    },
+    {
+      "hand_id": 33,
+      "text": "11 333 55 777 9999",
+      "note": "Any 3 Suits",
+      "family": "13579",
+      "concealed": false,
+      "complete_pct": 1.7,
+      "rank": 19
+    },
+    {
+      "hand_id": 34,
+      "text": "111 333 3333 5555",
+      "note": "Any 2 Suits",
+      "family": "13579",
+      "concealed": false,
+      "complete_pct": 0.62,
+      "rank": 43
+    },
+    {
+      "hand_id": 35,
+      "text": "555 777 7777 9999",
+      "note": "Any 2 Suits",
+      "family": "13579",
+      "concealed": false,
+      "complete_pct": 0.65,
+      "rank": 42
+    },
+    {
+      "hand_id": 36,
+      "text": "NN 1111 33 5555 SS",
+      "note": "Any 1 Suit, North and South Only",
+      "family": "13579",
+      "concealed": false,
+      "complete_pct": 0.23,
+      "rank": 59
+    },
+    {
+      "hand_id": 37,
+      "text": "NN 5555 77 9999 SS",
+      "note": "Any 1 Suit, North and South Only",
+      "family": "13579",
+      "concealed": false,
+      "complete_pct": 0.22,
+      "rank": 60
+    },
+    {
+      "hand_id": 38,
+      "text": "113579 1111 1111",
+      "note": "Any 3 Suits, Pair Any Odd No., Kongs Match Pair",
+      "family": "13579",
+      "concealed": false,
+      "complete_pct": 3.5,
+      "rank": 11
+    },
+    {
+      "hand_id": 39,
+      "text": "FFF 11 33 555 DDDD",
+      "note": "Any 1 Suit w Matching Dragon",
+      "family": "13579",
+      "concealed": false,
+      "complete_pct": 0.93,
+      "rank": 35
+    },
+    {
+      "hand_id": 40,
+      "text": "FFF 55 77 999 DDDD",
+      "note": "Any 1 Suit w Matching Dragon",
+      "family": "13579",
+      "concealed": false,
+      "complete_pct": 0.89,
+      "rank": 36
+    },
+    {
+      "hand_id": 41,
+      "text": "11 33 111 333 5555",
+      "note": "Any 3 Suits",
+      "family": "13579",
+      "concealed": false,
+      "complete_pct": 1.33,
+      "rank": 26
+    },
+    {
+      "hand_id": 42,
+      "text": "55 77 555 777 9999",
+      "note": "Any 3 Suits",
+      "family": "13579",
+      "concealed": false,
+      "complete_pct": 1.32,
+      "rank": 28
+    },
+    {
+      "hand_id": 43,
+      "text": "1111 33 55 77 9999",
+      "note": "Any 1 Suit",
+      "family": "13579",
+      "concealed": false,
+      "complete_pct": 0.15,
+      "rank": 64
+    },
+    {
+      "hand_id": 44,
+      "text": "1111 33 55 77 9999",
+      "note": "Any 2 Suits",
+      "family": "13579",
+      "concealed": false,
+      "complete_pct": 0.43,
+      "rank": 54
+    },
+    {
+      "hand_id": 45,
+      "text": "FF 11 33 55 111 111",
+      "note": "Any 3 Suits, These Nos. Only",
+      "family": "13579",
+      "concealed": true,
+      "complete_pct": 0.45,
+      "rank": 50
+    },
+    {
+      "hand_id": 46,
+      "text": "FF 55 77 99 555 555",
+      "note": "Any 3 Suits, These Nos. Only",
+      "family": "13579",
+      "concealed": true,
+      "complete_pct": 0.43,
+      "rank": 53
+    },
+    {
+      "hand_id": 47,
+      "text": "FF 135 777 999 DDD",
+      "note": "Any 1 Suit w Opp. Dragon",
+      "family": "13579",
+      "concealed": true,
+      "complete_pct": 1.68,
+      "rank": 21
+    },
+    {
+      "hand_id": 48,
+      "text": "NNNN EEE WWW SSSS",
+      "note": "",
+      "family": "Winds",
+      "concealed": false,
+      "complete_pct": 0.1,
+      "rank": 66
+    },
+    {
+      "hand_id": 49,
+      "text": "NNN EEEE WWWW SSS",
+      "note": "",
+      "family": "Winds",
+      "concealed": false,
+      "complete_pct": 0.09,
+      "rank": 68
+    },
+    {
+      "hand_id": 50,
+      "text": "1234 DDD DDD DDDD",
+      "note": "Any 4 Consec. Nos. in Any 1 Suit, Any 3 Dragons",
+      "family": "Winds",
+      "concealed": false,
+      "complete_pct": 4.68,
+      "rank": 7
+    },
+    {
+      "hand_id": 51,
+      "text": "NNN 1111 1111 SSS",
+      "note": "Any Like Odd Nos. in Any 2 Suits",
+      "family": "Winds",
+      "concealed": false,
+      "complete_pct": 1.99,
+      "rank": 18
+    },
+    {
+      "hand_id": 52,
+      "text": "EEE 2222 2222 WWW",
+      "note": "Any Like Even Nos. in Any 2 Suits",
+      "family": "Winds",
+      "concealed": false,
+      "complete_pct": 1.41,
+      "rank": 25
+    },
+    {
+      "hand_id": 53,
+      "text": "FFF NNNN FFF DDDD",
+      "note": "Any Wind, Any Dragon",
+      "family": "Winds",
+      "concealed": false,
+      "complete_pct": 0.09,
+      "rank": 67
+    },
+    {
+      "hand_id": 54,
+      "text": "1 N 2 EE 3 WWW 4 SSSS",
+      "note": "Any 1 Suit, These Nos. Only",
+      "family": "Winds",
+      "concealed": false,
+      "complete_pct": 2.06,
+      "rank": 17
+    },
+    {
+      "hand_id": 55,
+      "text": "FF NNNN SSSS DD DD",
+      "note": "Any 2 Dragons",
+      "family": "Winds",
+      "concealed": false,
+      "complete_pct": 0.3,
+      "rank": 56
+    },
+    {
+      "hand_id": 56,
+      "text": "FF EEEE WWWW DD DD",
+      "note": "Any 2 Dragons",
+      "family": "Winds",
+      "concealed": false,
+      "complete_pct": 0.29,
+      "rank": 57
+    },
+    {
+      "hand_id": 57,
+      "text": "NN EEE 2026 WWW SS",
+      "note": "2026 Any 1 Suit",
+      "family": "Winds",
+      "concealed": true,
+      "complete_pct": 0.48,
+      "rank": 49
+    },
+    {
+      "hand_id": 58,
+      "text": "333 666 6666 9999",
+      "note": "Any 2 Suits",
+      "family": "369",
+      "concealed": false,
+      "complete_pct": 0.48,
+      "rank": 48
+    },
+    {
+      "hand_id": 59,
+      "text": "333 666 6666 9999",
+      "note": "Any 3 Suits",
+      "family": "369",
+      "concealed": false,
+      "complete_pct": 0.44,
+      "rank": 51
+    },
+    {
+      "hand_id": 60,
+      "text": "33 66 333 666 9999",
+      "note": "Any 3 Suits",
+      "family": "369",
+      "concealed": false,
+      "complete_pct": 1.03,
+      "rank": 30
+    },
+    {
+      "hand_id": 61,
+      "text": "FFF 33 666 99 DDDD",
+      "note": "Any 1 Suit w Matching Dragon",
+      "family": "369",
+      "concealed": false,
+      "complete_pct": 0.82,
+      "rank": 37
+    },
+    {
+      "hand_id": 62,
+      "text": "FFF 33 666 99 DDDD",
+      "note": "Any 1 Suit w Opp. Dragon",
+      "family": "369",
+      "concealed": false,
+      "complete_pct": 1.65,
+      "rank": 23
+    },
+    {
+      "hand_id": 63,
+      "text": "33 66 666 999 NEWS",
+      "note": "Any 2 Suits",
+      "family": "369",
+      "concealed": false,
+      "complete_pct": 4.5,
+      "rank": 8
+    },
+    {
+      "hand_id": 64,
+      "text": "FF 3369 3333 3333",
+      "note": "Any 3 Suits, Pair 3,6, or 9, Kongs Match Pair",
+      "family": "369",
+      "concealed": false,
+      "complete_pct": 0.94,
+      "rank": 34
+    },
+    {
+      "hand_id": 65,
+      "text": "FF 333 666 999 369",
+      "note": "Any 2 Suits",
+      "family": "369",
+      "concealed": true,
+      "complete_pct": 1.5,
+      "rank": 24
+    },
+    {
+      "hand_id": 66,
+      "text": "NN EE WW SS 1D 1D 1D",
+      "note": "Any 3 Suits, Any Like No. w Matching Dragon",
+      "family": "Singles & Pairs",
+      "concealed": true,
+      "complete_pct": 0.44,
+      "rank": 52
+    },
+    {
+      "hand_id": 67,
+      "text": "2 4 66 88 2 4 66 88 88",
+      "note": "Any 3 Suits, These Nos. Only",
+      "family": "Singles & Pairs",
+      "concealed": true,
+      "complete_pct": 0.2,
+      "rank": 61
+    },
+    {
+      "hand_id": 68,
+      "text": "FF 3369 3669 3699",
+      "note": "Any 3 Suits",
+      "family": "Singles & Pairs",
+      "concealed": true,
+      "complete_pct": 1.03,
+      "rank": 31
+    },
+    {
+      "hand_id": 69,
+      "text": "11 22 33 44 55 66 77",
+      "note": "Any 1 Suit, Any 7 Consec. Nos.",
+      "family": "Singles & Pairs",
+      "concealed": true,
+      "complete_pct": 0.18,
+      "rank": 62
+    },
+    {
+      "hand_id": 70,
+      "text": "11 357 99 11 357 99",
+      "note": "Any 2 Suits",
+      "family": "Singles & Pairs",
+      "concealed": true,
+      "complete_pct": 0.54,
+      "rank": 45
+    },
+    {
+      "hand_id": 71,
+      "text": "FF 2026 2026 2026",
+      "note": "Any 3 Suits",
+      "family": "Singles & Pairs",
+      "concealed": true,
+      "complete_pct": 0.02,
+      "rank": 70
+    }
+  ]
+}

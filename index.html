@@ -20,22 +20,36 @@
         </div>
         <div class="stats" id="stats"></div>
         <div class="toolbar">
+          <button type="button" id="btn-new" class="btn btn-primary">New Game</button>
           <button type="button" id="btn-watch" class="btn">Watch</button>
-          <button type="button" id="btn-play" class="btn btn-primary">Play as East</button>
+          <button type="button" id="btn-play" class="btn">Play as East</button>
           <button type="button" id="btn-step" class="btn">Step</button>
           <button type="button" id="btn-auto" class="btn">Auto</button>
-          <button type="button" id="btn-sim" class="btn btn-ghost" title="Simulate 20 watch games">Sim 20</button>
+          <label class="run-count" title="Number of watch games to simulate">
+            <input type="number" id="run-count" min="1" max="10000" value="100" />
+            <button type="button" id="btn-run" class="btn">Run</button>
+          </label>
+          <button type="button" id="btn-clear" class="btn btn-ghost" title="Clear win stats">Clear</button>
         </div>
       </header>
 
       <main class="table-wrap">
+        <aside class="results-panel" aria-label="Game results">
+          <h3 class="results-title">Completions</h3>
+          <div class="chart" id="chart"></div>
+          <h3 class="results-title">Tiles left at mahjong</h3>
+          <p class="results-sub">Wall remaining in groups of 10</p>
+          <div class="chart" id="chart-rounds"></div>
+          <h3 class="results-title">Games</h3>
+          <div class="results-feed" id="results-feed"></div>
+        </aside>
         <div class="felt" id="felt">
           <section class="seat seat-west" data-seat="West">
             <div class="seat-meta">
               <h2>West</h2>
               <div class="seat-stats"></div>
-              <div class="seat-chase"></div>
             </div>
+            <ol class="seat-hands"></ol>
             <div class="rack exposed"></div>
             <div class="rack hand"></div>
           </section>
@@ -44,8 +58,8 @@
             <div class="seat-meta">
               <h2>North</h2>
               <div class="seat-stats"></div>
-              <div class="seat-chase"></div>
             </div>
+            <ol class="seat-hands"></ol>
             <div class="rack exposed"></div>
             <div class="rack hand"></div>
           </section>
@@ -54,8 +68,8 @@
             <div class="seat-meta">
               <h2>East <span class="you-tag" hidden>you</span></h2>
               <div class="seat-stats"></div>
-              <div class="seat-chase"></div>
             </div>
+            <ol class="seat-hands"></ol>
             <div class="rack exposed"></div>
             <div class="rack hand"></div>
           </section>
@@ -64,8 +78,8 @@
             <div class="seat-meta">
               <h2>South</h2>
               <div class="seat-stats"></div>
-              <div class="seat-chase"></div>
             </div>
+            <ol class="seat-hands"></ol>
             <div class="rack exposed"></div>
             <div class="rack hand"></div>
           </section>

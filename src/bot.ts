@@ -239,20 +239,65 @@ export class Bot {
     seat.lastEvent = `${seat.name} called ${discard.getDisplayName()} (${meldTiles.length})`;
   }
 
-  /** Top hands for display / debugging. */
-  static topHands(seat: Seat, n = 3): string[] {
+  /**
+   * Top matching card hands (unique patterns).
+   * Sort: most tiles filled, then more naturals.
+   * Optional `probOf` breaks remaining ties toward higher completion %.
+   */
+  static topHandMatches(
+    seat: Seat,
+    n = 5,
+    probOf?: (handIndex: number) => number | null,
+  ): Array<{
+    index: number;
+    filled: number;
+    naturals: number;
+    pattern: string;
+    note: string;
+    concealed: boolean;
+  }> {
     const tiles = seat.allTiles();
     const scored = seat.card.tileSets
       .map((ts) => seat.card.scoreTileSet(ts, tiles))
-      .sort((a, b) => b.filled - a.filled || b.naturals - a.naturals);
+      .sort((a, b) => {
+        if (b.filled !== a.filled) return b.filled - a.filled;
+        if (b.naturals !== a.naturals) return b.naturals - a.naturals;
+        if (probOf) {
+          const pa = probOf(a.pattern.index) ?? -1;
+          const pb = probOf(b.pattern.index) ?? -1;
+          if (pb !== pa) return pb - pa;
+        }
+        return 0;
+      });
     const seen = new Set<number>();
-    const out: string[] = [];
+    const out: Array<{
+      index: number;
+      filled: number;
+      naturals: number;
+      pattern: string;
+      note: string;
+      concealed: boolean;
+    }> = [];
     for (const s of scored) {
       if (seen.has(s.pattern.index)) continue;
       seen.add(s.pattern.index);
-      out.push(`${s.filled}/14  ${s.pattern.display()}`);
+      out.push({
+        index: s.pattern.index,
+        filled: s.filled,
+        naturals: s.naturals,
+        pattern: s.pattern.pattern.replace(/\s*\(C\)\s*/g, "").trim(),
+        note: s.pattern.note,
+        concealed: s.pattern.concealed,
+      });
       if (out.length >= n) break;
     }
     return out;
+  }
+
+  /** Top hands for display / debugging. */
+  static topHands(seat: Seat, n = 3): string[] {
+    return Bot.topHandMatches(seat, n).map(
+      (s) => `${s.filled}/14  ${s.pattern}${s.concealed ? " (C)" : ""}`,
+    );
   }
 }
