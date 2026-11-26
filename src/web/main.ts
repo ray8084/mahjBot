@@ -19,6 +19,8 @@ interface GameResultRow {
 
 const resultFeed: GameResultRow[] = [];
 const FEED_MAX = 200;
+let stopRequested = false;
+let running = false;
 
 function $(id: string): HTMLElement {
   const el = document.getElementById(id);
@@ -60,9 +62,6 @@ function renderSeat(name: SeatName): void {
   const youTag = section.querySelector(".you-tag") as HTMLElement | null;
   if (youTag) youTag.hidden = !(seat.isHuman);
 
-  const winnerTag = section.querySelector(".winner-tag") as HTMLElement | null;
-  if (winnerTag) winnerTag.hidden = !isWinner;
-
   (section.querySelector(".seat-stats") as HTMLElement).textContent =
     `W ${st.wins}/${st.games} (${rate}%)`;
 
@@ -91,8 +90,7 @@ function renderSeat(name: SeatName): void {
     li.innerHTML =
       `<span class="match">${m.filled}/14</span>` +
       `<span class="prob" title="1M-deal completion rate">${pct}</span>` +
-      `<span class="pat" title="${m.note || label}">${m.coloredHtml}</span>` +
-      (isWinningHand ? `<span class="win-mark">★</span>` : "");
+      `<span class="pat" title="${m.note || label}">${m.coloredHtml}</span>`;
     handsEl.appendChild(li);
   });
 
@@ -456,12 +454,20 @@ function yieldToUi(): Promise<void> {
 }
 
 async function runMany(n: number): Promise<void> {
+  if (running) return;
+  running = true;
+  stopRequested = false;
   const runBtn = $("btn-run") as HTMLButtonElement;
+  const stopBtn = $("btn-stop") as HTMLButtonElement;
   runBtn.disabled = true;
+  stopBtn.disabled = false;
   $("status").textContent = `Running 0 / ${n}…`;
 
+  let finished = 0;
   for (let i = 0; i < n; i++) {
+    if (stopRequested) break;
     const result = game.playOneWatchGame();
+    finished = i + 1;
     recordResult({
       gameNumber: result.gameNumber,
       wall: result.wall,
@@ -469,9 +475,9 @@ async function runMany(n: number): Promise<void> {
       hand: result.hand,
     });
     renderStats();
-    $("status").textContent = `Running ${i + 1} / ${n}…`;
+    $("status").textContent = `Running ${finished} / ${n}…`;
     // Keep UI responsive; refresh table tiles every 10 games
-    if (i === n - 1 || i % 10 === 9) {
+    if (i === n - 1 || i % 10 === 9 || stopRequested) {
       for (const name of ["East", "South", "West", "North"] as SeatName[]) {
         renderSeat(name);
       }
@@ -481,11 +487,17 @@ async function runMany(n: number): Promise<void> {
     }
   }
 
+  const wasStopped = stopRequested || finished < n;
   game.newGame(false);
   selected.clear();
+  running = false;
+  stopRequested = false;
   runBtn.disabled = false;
+  stopBtn.disabled = true;
   render();
-  $("status").textContent = `Done · ${n} games`;
+  $("status").textContent = wasStopped
+    ? `Stopped · ${finished} / ${n} games`
+    : `Done · ${n} games`;
 }
 
 async function boot(): Promise<void> {
@@ -508,6 +520,12 @@ async function boot(): Promise<void> {
     const n = Math.max(1, Math.min(10_000, Math.floor(Number(input.value) || 1)));
     input.value = String(n);
     void runMany(n);
+  });
+
+  $("btn-stop").addEventListener("click", () => {
+    if (!running) return;
+    stopRequested = true;
+    $("status").textContent = "Stopping…";
   });
 
   $("btn-clear").addEventListener("click", () => {

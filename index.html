@@ -28,6 +28,7 @@
           <label class="run-count" title="Number of watch games to simulate">
             <input type="number" id="run-count" min="1" max="10000" value="100" />
             <button type="button" id="btn-run" class="btn">Run</button>
+            <button type="button" id="btn-stop" class="btn btn-danger" disabled>Stop</button>
           </label>
           <button type="button" id="btn-clear" class="btn btn-ghost" title="Clear win stats">Clear</button>
         </div>
@@ -46,7 +47,7 @@
         <div class="felt" id="felt">
           <section class="seat seat-west" data-seat="West">
             <div class="seat-meta">
-              <h2>West <span class="winner-tag" hidden>Winner</span></h2>
+              <h2>West</h2>
               <div class="seat-stats"></div>
             </div>
             <div class="rack exposed"></div>
@@ -56,7 +57,7 @@
 
           <section class="seat seat-north" data-seat="North">
             <div class="seat-meta">
-              <h2>North <span class="winner-tag" hidden>Winner</span></h2>
+              <h2>North</h2>
               <div class="seat-stats"></div>
             </div>
             <div class="rack exposed"></div>
@@ -66,7 +67,7 @@
 
           <section class="seat seat-east" data-seat="East">
             <div class="seat-meta">
-              <h2>East <span class="you-tag" hidden>you</span> <span class="winner-tag" hidden>Winner</span></h2>
+              <h2>East <span class="you-tag" hidden>you</span></h2>
               <div class="seat-stats"></div>
             </div>
             <div class="rack exposed"></div>
@@ -76,7 +77,7 @@
 
           <section class="seat seat-south" data-seat="South">
             <div class="seat-meta">
-              <h2>South <span class="winner-tag" hidden>Winner</span></h2>
+              <h2>South</h2>
               <div class="seat-stats"></div>
             </div>
             <div class="rack exposed"></div>
