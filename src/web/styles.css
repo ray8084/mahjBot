@@ -416,9 +416,10 @@ body {
   order: 2;
   list-style: none;
   margin: 0;
-  padding: 0.25rem 0.4rem;
+  padding: 0.3rem 0.45rem;
   border-radius: 4px;
-  background: rgba(0, 0, 0, 0.16);
+  background: rgba(255, 252, 245, 0.92);
+  color: #111;
   font-size: 0.62rem;
   line-height: 1.3;
   font-variant-numeric: tabular-nums;
@@ -432,44 +433,66 @@ body {
 
 .seat-hands li {
   display: grid;
-  grid-template-columns: 2.2em 2.8em 1fr;
+  grid-template-columns: 2.2em 2.8em 1fr auto;
   gap: 0.25rem;
   align-items: baseline;
   white-space: nowrap;
   min-width: 0;
 }
 
+.seat-hands .suit-black {
+  color: #111;
+}
+
+.seat-hands .suit-red {
+  color: #c62828;
+  font-weight: 700;
+}
+
+.seat-hands .suit-green {
+  color: #1b7a3d;
+  font-weight: 700;
+}
+
+.seat-hands li.winning-hand {
+  background: rgba(255, 229, 102, 0.35);
+  border-radius: 3px;
+  outline: 1px solid #ffe566;
+  padding: 0 0.15rem;
+}
+
 .seat-hands .match {
   font-weight: 700;
-  color: #fff;
+  color: #1c2a26;
 }
 
 .seat-hands .prob {
-  color: #b7e4da;
+  color: #1f6f63;
   font-weight: 600;
 }
 
 .seat-hands .pat {
   overflow: hidden;
   text-overflow: ellipsis;
-  opacity: 0.9;
+  opacity: 1;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .seat-hands li.best-prob {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(31, 111, 99, 0.1);
   border-radius: 3px;
-  outline: 1px solid rgba(255, 255, 255, 0.45);
+  outline: 1px solid rgba(31, 111, 99, 0.35);
   padding: 0 0.15rem;
 }
 
 .seat-hands li.best-prob .prob {
-  color: #fff;
   font-weight: 700;
 }
 
-.seat-hands li.best-prob .pat {
-  opacity: 1;
-  font-weight: 600;
+.seat-hands .win-mark {
+  color: #b8860b;
+  font-weight: 700;
 }
 
 .seat-east .seat-hands {
@@ -483,9 +506,10 @@ body {
 
 .seat-west .seat-hands,
 .seat-south .seat-hands {
-  max-width: 260px;
-  font-size: 0.58rem;
-  gap: 0.08rem 0.35rem;
+  max-width: 420px;
+  width: max(320px, 100%);
+  font-size: 0.6rem;
+  gap: 0.08rem 0.45rem;
 }
 
 .seat.active .seat-meta h2 {
@@ -565,14 +589,14 @@ body {
   top: 34%;
   right: 1.5%;
   align-items: flex-end;
-  max-width: 26%;
+  max-width: 38%;
 }
 
 .seat-west {
   top: 34%;
   left: 1.5%;
   align-items: flex-start;
-  max-width: 26%;
+  max-width: 38%;
 }
 
 .seat-east {

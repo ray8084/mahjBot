@@ -255,6 +255,7 @@ export class Bot {
     pattern: string;
     note: string;
     concealed: boolean;
+    coloredHtml: string;
   }> {
     const tiles = seat.allTiles();
     const scored = seat.card.tileSets
@@ -277,6 +278,7 @@ export class Bot {
       pattern: string;
       note: string;
       concealed: boolean;
+      coloredHtml: string;
     }> = [];
     for (const s of scored) {
       if (seen.has(s.pattern.index)) continue;
@@ -288,6 +290,7 @@ export class Bot {
         pattern: s.pattern.pattern.replace(/\s*\(C\)\s*/g, "").trim(),
         note: s.pattern.note,
         concealed: s.pattern.concealed,
+        coloredHtml: s.pattern.coloredHtml(true),
       });
       if (out.length >= n) break;
     }

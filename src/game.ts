@@ -50,6 +50,8 @@ export class Game {
   events: string[] = [];
   winner: SeatName | null = null;
   winningHand = "";
+  /** Card pattern index of the hand that won (for highlighting). */
+  winningPatternIndex: number | null = null;
   wallGame = false;
   /** Human controls East when true. */
   humanEast = false;
@@ -117,6 +119,7 @@ export class Game {
     this.events = [];
     this.winner = null;
     this.winningHand = "";
+    this.winningPatternIndex = null;
     this.wallGame = false;
     this.humanPass = [];
     this.pendingHumanCall = null;
@@ -301,6 +304,7 @@ export class Game {
     this.phase = "over";
     this.winner = seat.name;
     this.winningHand = win.pattern.display();
+    this.winningPatternIndex = win.pattern.index;
     this.log(`MAHJONG! ${seat.name}: ${this.winningHand}`);
     this.revealWinningHand(seat, win.tileSet.tileIds);
     this.gamesPlayed++;
@@ -341,6 +345,7 @@ export class Game {
     this.phase = "over";
     this.wallGame = true;
     this.winner = null;
+    this.winningPatternIndex = null;
     this.log("Wall game — no winner.");
     this.gamesPlayed++;
     this.wallGames++;

@@ -73,6 +73,54 @@ export class LetterPattern {
     if (this.note) s += ` — ${this.note}`;
     return s;
   }
+
+  /**
+   * Color each pattern character from the NMJL mask:
+   * g = green, r = red, 0/other = black. Spaces and separators stay uncolored.
+   */
+  coloredSegments(): Array<{ text: string; color: "black" | "red" | "green" }> {
+    const text = this.pattern.replace(/\s*\(C\)\s*/g, "").trim();
+    const mask = this.mask;
+    const colors: Array<"black" | "red" | "green"> = new Array(text.length).fill("black");
+    let maskIndex = 0;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (ch === " " || ch === "+" || ch === "=" || ch === "x" || ch === "X") continue;
+      while (maskIndex < mask.length && mask[maskIndex] === " ") maskIndex++;
+      if (maskIndex >= mask.length) break;
+      const m = mask[maskIndex];
+      if (m === "g") colors[i] = "green";
+      else if (m === "r") colors[i] = "red";
+      else colors[i] = "black";
+      maskIndex++;
+    }
+    const segments: Array<{ text: string; color: "black" | "red" | "green" }> = [];
+    for (let i = 0; i < text.length; i++) {
+      const last = segments[segments.length - 1];
+      if (last && last.color === colors[i]) last.text += text[i];
+      else segments.push({ text: text[i], color: colors[i] });
+    }
+    return segments;
+  }
+
+  /** HTML for the pattern with mask colors (safe: digits/letters/spaces only). */
+  coloredHtml(includeConcealed = true): string {
+    const parts = this.coloredSegments()
+      .map((s) => `<span class="suit-${s.color}">${escapeHtml(s.text)}</span>`)
+      .join("");
+    if (includeConcealed && this.concealed) {
+      return `${parts}<span class="suit-black"> (C)</span>`;
+    }
+    return parts;
+  }
+}
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 export interface ScoredSet {

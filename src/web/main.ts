@@ -83,10 +83,16 @@ function renderSeat(name: SeatName): void {
     const pct = probs.formatPct(m.index);
     const label = m.concealed ? `${m.pattern} (C)` : m.pattern;
     if (i === bestProbIdx) li.classList.add("best-prob");
+    const isWinningHand =
+      game.phase === "over" &&
+      game.winner === name &&
+      game.winningPatternIndex === m.index;
+    if (isWinningHand) li.classList.add("winning-hand");
     li.innerHTML =
       `<span class="match">${m.filled}/14</span>` +
       `<span class="prob" title="1M-deal completion rate">${pct}</span>` +
-      `<span class="pat" title="${m.note || label}">${label}</span>`;
+      `<span class="pat" title="${m.note || label}">${m.coloredHtml}</span>` +
+      (isWinningHand ? `<span class="win-mark">★</span>` : "");
     handsEl.appendChild(li);
   });
 
