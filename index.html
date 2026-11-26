@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mahjBot — American Mahjong</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark">mahjBot</span>
+          <span class="brand-sub">American Mahjong · 2026 card</span>
+        </div>
+        <div class="stats" id="stats"></div>
+        <div class="toolbar">
+          <button type="button" id="btn-watch" class="btn">Watch</button>
+          <button type="button" id="btn-play" class="btn btn-primary">Play as East</button>
+          <button type="button" id="btn-step" class="btn">Step</button>
+          <button type="button" id="btn-auto" class="btn">Auto</button>
+          <button type="button" id="btn-sim" class="btn btn-ghost" title="Simulate 20 watch games">Sim 20</button>
+        </div>
+      </header>
+
+      <main class="table-wrap">
+        <div class="felt" id="felt">
+          <section class="seat seat-west" data-seat="West">
+            <div class="seat-meta">
+              <h2>West</h2>
+              <div class="seat-stats"></div>
+              <div class="seat-chase"></div>
+            </div>
+            <div class="rack exposed"></div>
+            <div class="rack hand"></div>
+          </section>
+
+          <section class="seat seat-north" data-seat="North">
+            <div class="seat-meta">
+              <h2>North</h2>
+              <div class="seat-stats"></div>
+              <div class="seat-chase"></div>
+            </div>
+            <div class="rack exposed"></div>
+            <div class="rack hand"></div>
+          </section>
+
+          <section class="seat seat-east" data-seat="East">
+            <div class="seat-meta">
+              <h2>East <span class="you-tag" hidden>you</span></h2>
+              <div class="seat-stats"></div>
+              <div class="seat-chase"></div>
+            </div>
+            <div class="rack exposed"></div>
+            <div class="rack hand"></div>
+          </section>
+
+          <section class="seat seat-south" data-seat="South">
+            <div class="seat-meta">
+              <h2>South</h2>
+              <div class="seat-stats"></div>
+              <div class="seat-chase"></div>
+            </div>
+            <div class="rack exposed"></div>
+            <div class="rack hand"></div>
+          </section>
+
+          <div class="center">
+            <div class="center-status" id="status"></div>
+            <div class="discard-area">
+              <div class="discard-label">Discard</div>
+              <div class="discard-tile" id="discard"></div>
+            </div>
+            <div class="wall-count" id="wall"></div>
+            <div class="action-row" id="actions"></div>
+            <div class="log" id="log"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script type="module" src="/src/web/main.ts"></script>
+  </body>
+</html>
